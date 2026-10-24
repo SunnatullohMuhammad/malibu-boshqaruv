@@ -1,4 +1,4 @@
-name = "cobalt-control-bridge"
+name = "cobalt-control-uno-2026"
 main = "src/worker.js"
 compatibility_date = "2026-10-24"
 
