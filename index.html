@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0e11">
+  <title>Malibu · Boshqaruv</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap');
+    :root{color-scheme:dark;--bg:#0b0e11;--panel:#12171b;--line:#272e32;--muted:#818b90;--white:#edf1ee;--lime:#d1fb71;--blue:#7bc7ff;--red:#ff766b}
+    *{box-sizing:border-box}body{margin:0;min-height:100svh;background:radial-gradient(ellipse at 52% 22%,#202821 0,#101512 26%,var(--bg) 65%);color:var(--white);font-family:Manrope,system-ui,sans-serif;display:flex;justify-content:center;padding:env(safe-area-inset-top) 20px env(safe-area-inset-bottom)}
+    .app{width:min(100%,430px);min-height:100svh;display:flex;flex-direction:column;padding:27px 0 24px}.top{display:flex;justify-content:space-between;align-items:center}.brand{font-size:12px;font-weight:800;letter-spacing:.19em;color:#dfe5dc}.brand span{color:var(--lime)}.connection{display:flex;align-items:center;gap:8px;font:10px 'DM Mono',monospace;letter-spacing:.08em;color:#9da7a2}.dot{width:7px;height:7px;border-radius:50%;background:#6f7772;box-shadow:0 0 0 4px #727a7218}.connection.on .dot{background:var(--lime);box-shadow:0 0 10px #d1fb71a6}
+    .heading{margin-top:35px}.eyebrow{font:10px 'DM Mono',monospace;color:var(--muted);letter-spacing:.16em;text-transform:uppercase}.heading h1{margin:7px 0 0;font-size:28px;letter-spacing:-.055em;font-weight:600}.vehicle{margin-top:5px;color:var(--muted);font-size:12px}
+    .scene{position:relative;height:218px;margin:7px -13px 2px;display:grid;place-items:center}.scene:after{content:"";position:absolute;bottom:33px;width:78%;height:1px;background:linear-gradient(90deg,transparent,#57635765,transparent)}.car{width:100%;max-width:420px;overflow:visible;filter:drop-shadow(0 18px 20px #0009)}.car .body{fill:#c9cec5}.car .glass{fill:#313a38}.car .trim{fill:#879088}.car .wheel{fill:#111719;stroke:#5c6560;stroke-width:2}.car .hub{fill:#929a91}.car .light{fill:#ffdd9a;filter:drop-shadow(0 0 8px #ffc968)}.car .tail{fill:#ff665c;filter:drop-shadow(0 0 6px #ff665c)}.car .windows{fill:#303a38}.state-running .car .light{fill:var(--lime);filter:drop-shadow(0 0 11px var(--lime))}.state-running .car .tail{fill:#ff6457}
+    .status{display:flex;justify-content:center;align-items:center;gap:8px;margin-top:-3px;font:10px 'DM Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#aab1aa}.status i{width:5px;height:5px;border-radius:50%;background:var(--muted)}.state-running .status{color:var(--lime)}.state-running .status i{background:var(--lime);box-shadow:0 0 8px var(--lime)}
+    .start-wrap{display:flex;justify-content:center;margin:23px 0 27px}.start{position:relative;width:100px;height:100px;border:1px solid #4c5747;border-radius:50%;background:radial-gradient(circle at 42% 34%,#36442b,#1c2619 62%,#121712);color:var(--lime);display:grid;place-items:center;cursor:pointer;box-shadow:0 0 0 6px #a5ce4a0a,0 0 0 1px #b9e77826,inset 0 1px 0 #ffffff15,0 12px 28px #0008;transition:.25s;touch-action:manipulation}.start:before{content:"";position:absolute;inset:7px;border:1px solid #d1fb712e;border-radius:50%}.start:active{transform:scale(.96)}.start.running{background:radial-gradient(circle at 42% 34%,#d4fb7b,#86a84b 68%,#44562e);color:#172012;box-shadow:0 0 30px #c8f57545,0 0 0 6px #a5ce4a0a,inset 0 1px 0 #fff8}.start svg{width:24px;height:24px}.start small{position:absolute;bottom:20px;font:8px 'DM Mono',monospace;letter-spacing:.12em}.start .power{position:absolute;top:21px}
+    .rule{height:1px;background:var(--line);margin:0 0 20px}.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.section-head h2{margin:0;font-size:11px;font-weight:700;letter-spacing:.04em}.hint{font-size:10px;color:var(--muted)}.controls{display:grid;grid-template-columns:1fr 1fr;gap:10px}.control{position:relative;height:112px;border:1px solid #2a3233;border-radius:15px;background:linear-gradient(145deg,#171d1d,#101416);overflow:hidden;touch-action:none;user-select:none;cursor:pointer;transition:border-color .2s,background .2s}.control:active{background:#1a201c}.control.active{border-color:#627349;background:linear-gradient(145deg,#20271c,#111612)}.control.drop{border-color:#b9db70}.control .icon{position:absolute;top:15px;left:16px;width:22px;height:22px;color:#a9b2a9}.control.active .icon{color:var(--lime)}.control .label{position:absolute;left:16px;bottom:14px;font-size:13px;font-weight:700}.control .sub{position:absolute;right:14px;bottom:16px;font:8px 'DM Mono',monospace;color:#818b83;letter-spacing:.08em}.control .pull{position:absolute;right:15px;top:17px;color:#7c867e;font-size:12px;transition:.2s}.control.drop .pull{transform:translateY(8px);color:var(--lime)}.control .drag-progress{position:absolute;bottom:0;left:0;height:2px;width:0;background:var(--lime);transition:width .08s linear}.control.alarm{border-color:#765348;background:linear-gradient(145deg,#2a1d1a,#151211)}.control.alarm .icon{color:#ff9074}.control.trunk{border-color:#49697d;background:linear-gradient(145deg,#18252c,#111619)}.control.trunk .icon{color:var(--blue)}
+    .toast{position:fixed;left:50%;bottom:calc(26px + env(safe-area-inset-bottom));transform:translate(-50%,12px);padding:11px 16px;border:1px solid #343c35;border-radius:30px;background:#1c221e;color:#e9eee6;font-size:11px;white-space:nowrap;opacity:0;transition:.22s;pointer-events:none;box-shadow:0 8px 25px #0008}.toast.show{opacity:1;transform:translate(-50%,0)}.foot{margin-top:auto;padding-top:21px;text-align:center;color:#58615b;font:9px 'DM Mono',monospace;letter-spacing:.04em}
+    @media(min-height:820px){.app{padding-top:34px}.heading{margin-top:45px}.scene{height:240px}.start-wrap{margin-top:28px;margin-bottom:33px}.control{height:120px}}
+    @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+  </style>
+</head>
+<body>
+  <main class="app" id="app">
+    <header class="top"><div class="brand">GARAGE<span>/</span>01</div><div class="connection" id="connection"><i class="dot"></i><span>DEMO REJIMI</span></div></header>
+    <section class="heading"><div class="eyebrow">AVTOMOBIL BOSHQARUVI</div><h1>Malibu</h1><div class="vehicle">Chevrolet · masofaviy boshqaruv</div></section>
+    <section class="scene" aria-label="Chevrolet Malibu tasviri">
+      <svg class="car" viewBox="0 0 440 220" role="img" aria-label="Malibu avtomobili">
+        <ellipse cx="221" cy="177" rx="169" ry="15" fill="#000" opacity=".55"/>
+        <path class="body" d="M52 147c4-16 15-27 36-33l53-14 41-40c8-8 19-13 31-13h67c16 0 29 6 40 18l35 39 33 11c15 5 22 16 23 31l1 19c0 8-6 14-14 14h-25c-2-23-18-39-41-39s-39 16-41 39H151c-2-23-18-39-41-39s-39 16-41 39H51c-8 0-13-6-12-14l2-13c1-3 4-5 11-5z"/>
+        <path class="windows" d="m151 96 37-35c7-7 16-10 26-10h28v45zm99-45h29c13 0 23 5 32 15l27 30H250z"/>
+        <path class="trim" d="M47 145h33v5H47zm286-3h43l9 5h-52z" opacity=".75"/>
+        <path class="light" d="m45 137 24-5-3 13-19 3z"/><path class="tail" d="m373 132 17 8 3 12-18-2z"/>
+        <path d="M239 52v47" stroke="#929a91" stroke-width="2" opacity=".55"/><path d="m146 99 190 0" stroke="#818981" stroke-width="1" opacity=".3"/>
+        <circle class="wheel" cx="110" cy="153" r="27"/><circle class="hub" cx="110" cy="153" r="12"/><circle cx="110" cy="153" r="5" fill="#28302c"/>
+        <circle class="wheel" cx="331" cy="153" r="27"/><circle class="hub" cx="331" cy="153" r="12"/><circle cx="331" cy="153" r="5" fill="#28302c"/>
+      </svg>
+    </section>
+    <div class="status" id="status"><i></i><span>O‘CHIRILGAN</span></div>
+    <div class="start-wrap"><button class="start" id="ignition" aria-label="O‘t oldirish"><svg class="power" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v10"/><path d="M5.6 5.6a9 9 0 1 0 12.8 0"/></svg><small id="ignitionLabel">START</small></button></div>
+    <div class="rule"></div>
+    <div class="section-head"><h2>QULF VA XAVFSIZLIK</h2><span class="hint">Pastga tortib turing ↓</span></div>
+    <section class="controls">
+      <button class="control" id="lock" type="button" aria-label="Qulflash. Signalizatsiya uchun pastga torting">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span class="pull">↓</span><span class="label">Qulflash</span><span class="sub">ODDIY BOSISH</span><span class="drag-progress"></span>
+      </button>
+      <button class="control" id="unlock" type="button" aria-label="Ochish. Bagaj uchun pastga torting">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 7.5-2"/></svg><span class="pull">↓</span><span class="label">Ochish</span><span class="sub">ODDIY BOSISH</span><span class="drag-progress"></span>
+      </button>
+    </section>
+    <footer class="foot">ALOQA ULANGANDA · AVTOMOBIL HOLATI YANGILANADI</footer>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script>
+    const $=s=>document.querySelector(s), app=$('#app'), toast=$('#toast');let locked=false,running=false,toastTimer;
+    function notice(text){toast.textContent=text;toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('show'),1900)}
+    $('#ignition').addEventListener('click',()=>{running=!running;app.classList.toggle('state-running',running);$('#ignition').classList.toggle('running',running);$('#status span').textContent=running?'O‘T OLDIRILGAN':'O‘CHIRILGAN';$('#ignitionLabel').textContent=running?'STOP':'START';notice(running?'O‘t oldirish yoqildi':'Avtomobil o‘chirildi')});
+    const lock=$('#lock'),unlock=$('#unlock');
+    function setLock(next){locked=next;lock.classList.toggle('active',locked);lock.querySelector('.sub').textContent=locked?'QULFLANGAN':'ODDIY BOSISH';notice(locked?'Avtomobil qulflandi':'Avtomobil ochildi')}
+    function special(el,kind){if(kind==='alarm'){el.classList.add('alarm');el.querySelector('.sub').textContent='OXRANA YOQILDI';notice('Oxrana yoqildi')}else{el.classList.add('trunk');el.querySelector('.sub').textContent='BAGAJ OCHILDI';notice('Bagaj ochildi')}setTimeout(()=>{el.classList.remove('alarm','trunk');el.querySelector('.sub').textContent=kind==='alarm'?(locked?'QULFLANGAN':'ODDIY BOSISH'):'ODDIY BOSISH'},1700)}
+    function bindGesture(el,kind){let startY=0,startX=0,pointer=null,dragged=false,done=false;const bar=el.querySelector('.drag-progress');el.addEventListener('pointerdown',e=>{if(e.button!==undefined&&e.button!==0)return;pointer=e.pointerId;startY=e.clientY;startX=e.clientX;dragged=false;done=false;el.setPointerCapture(pointer)});el.addEventListener('pointermove',e=>{if(pointer!==e.pointerId)return;const dy=e.clientY-startY,dx=e.clientX-startX;if(dy>7&&dy>Math.abs(dx)){dragged=true;el.classList.add('drop');bar.style.width=Math.min(100,dy/75*100)+'%';if(dy>=75&&!done){done=true;special(el,kind)}}});function end(e){if(pointer!==e.pointerId)return;if(!dragged&&!done){if(kind==='alarm')setLock(!locked);else setLock(false)}pointer=null;el.classList.remove('drop');bar.style.width='0%'}el.addEventListener('pointerup',end);el.addEventListener('pointercancel',end)}
+    bindGesture(lock,'alarm');bindGesture(unlock,'trunk');
+  </script>
+</body>
+</html>
+
