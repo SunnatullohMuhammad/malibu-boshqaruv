@@ -75,6 +75,7 @@ export class CarControl {
       if (c === "LOCK") { this.car.locked = true; this.car.alarm = false; }
       if (c === "UNLOCK") { this.car.locked = false; this.car.alarm = false; }
       if (c === "ALARM") { this.car.locked = true; this.car.alarm = true; }
+      this.car.lastResult = { id: item.id, command: c, at: Date.now() };
       this.car.lastSeen = Date.now();
       await this.state.storage.put({ queue: this.queue, car: this.car });
       return json({ acknowledged: true });
