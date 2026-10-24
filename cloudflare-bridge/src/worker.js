@@ -29,7 +29,7 @@ export default {
     if (request.method === "OPTIONS") return json({}, 200, SITE_ORIGIN);
     if (!authorized(request, env)) return json({ error: "unauthorized" }, 401, SITE_ORIGIN);
     const id = env.CAR.idFromName("cobalt-main");
-    return env.CAR.get(id).fetch(`https://car.internal${url.pathname}`, request);
+    return env.CAR.get(id).fetch(request);
   }
 };
 
