@@ -1,0 +1,12 @@
+name = "cobalt-control-bridge"
+main = "src/worker.js"
+compatibility_date = "2026-10-24"
+
+[[durable_objects.bindings]]
+name = "CAR"
+class_name = "CarControl"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["CarControl"]
+
