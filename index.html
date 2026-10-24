@@ -58,7 +58,7 @@
     const lock=$('#lock'),unlock=$('#unlock');
     function renderLock(){lock.classList.toggle("active",locked);lock.classList.toggle("alarm",alarmOn)}
     function setLock(next){locked=next;alarmOn=false;renderLock();notice(locked?'Qulflandi':'Qulf ochildi')}
-    function shortAction(kind){if(kind==="lock")setLock(true);else setLock(false)}
+    function shortAction(kind){if(kind==="alarm")setLock(true);else setLock(false)}
     function specialAction(el,kind){if(kind==="alarm"){locked=true;alarmOn=true;renderLock();notice("Oxrana yoqildi")}else{notice("Bagaj ochildi")}}
     function bindPress(el,kind){let pointer=null,startX=0,startY=0,startedAt=0,timer=0,triggered=false,moved=false,skipClick=false,frame=0;
       function resetProgress(){el.style.setProperty("--hold",0)}
@@ -73,6 +73,7 @@
   </script>
 </body>
 </html>
+
 
 
 
