@@ -57,22 +57,25 @@
     $('#ignition').addEventListener('click',()=>{running=!running;app.classList.toggle('state-running',running);$('#ignition').classList.toggle('running',running);$('#status span').textContent=running?'O‘T OLDIRILGAN':'O‘CHIRILGAN';$('#ignitionLabel').textContent=running?'STOP':'START';notice(running?'O‘t oldirish yoqildi':'Avtomobil o‘chirildi')});
     const lock=$('#lock'),unlock=$('#unlock');
     function renderLock(){lock.classList.toggle("active",locked);lock.classList.toggle("alarm",alarmOn)}
-    function setLock(next){locked=next;alarmOn=false;renderLock();notice(locked?'Avtomobil qulflandi':'Avtomobil ochildi')}
+    function setLock(next){locked=next;alarmOn=false;renderLock();notice(locked?'Qulflandi':'Qulf ochildi')}
     function shortAction(kind){if(kind==="lock")setLock(true);else setLock(false)}
     function specialAction(el,kind){if(kind==="alarm"){locked=true;alarmOn=true;renderLock();notice("Oxrana yoqildi")}else{notice("Bagaj ochildi")}}
-    function bindPress(el,kind){let pointer=null,startX=0,startY=0,startedAt=0,timer=0,triggered=false,moved=false,frame=0;const bar=el.querySelector('.progress span');
-      function resetProgress(){el.style.setProperty('--hold',0)}
-      function animate(){if(pointer===null)return;const progress=Math.min(1,(performance.now()-startedAt)/HOLD_MS);el.style.setProperty('--hold',progress);if(progress<1&&!triggered)frame=requestAnimationFrame(animate)}
-      function end(e){if(pointer!==e.pointerId)return;clearTimeout(timer);cancelAnimationFrame(frame);const wasTriggered=triggered;pointer=null;el.classList.remove('holding');resetProgress();if(!moved&&!wasTriggered)shortAction(kind)}
-      el.addEventListener('pointerdown',e=>{if(e.button!==undefined&&e.button!==0)return;pointer=e.pointerId;startX=e.clientX;startY=e.clientY;startedAt=performance.now();triggered=false;moved=false;el.classList.add('holding');el.setPointerCapture(pointer);timer=setTimeout(()=>{if(pointer!==null&&!moved&&!triggered){triggered=true;el.classList.remove('holding');specialAction(el,kind)}},HOLD_MS);frame=requestAnimationFrame(animate)});
-      el.addEventListener('pointermove',e=>{if(pointer!==e.pointerId)return;if(Math.hypot(e.clientX-startX,e.clientY-startY)>MOVE_LIMIT){moved=true;clearTimeout(timer);cancelAnimationFrame(frame);el.classList.remove('holding');resetProgress()}});
-      el.addEventListener('pointerup',end);el.addEventListener('pointercancel',end);
-      el.addEventListener('click',e=>{if(e.detail===0)shortAction(kind)});
+    function bindPress(el,kind){let pointer=null,startX=0,startY=0,startedAt=0,timer=0,triggered=false,moved=false,skipClick=false,frame=0;
+      function resetProgress(){el.style.setProperty("--hold",0)}
+      function animate(){if(pointer===null)return;const progress=Math.min(1,(performance.now()-startedAt)/HOLD_MS);el.style.setProperty("--hold",progress);if(progress<1&&!triggered)frame=requestAnimationFrame(animate)}
+      function end(e){if(pointer!==e.pointerId)return;clearTimeout(timer);cancelAnimationFrame(frame);skipClick=e.type==="pointerup"&&(triggered||moved);pointer=null;el.classList.remove("holding");resetProgress()}
+      el.addEventListener("pointerdown",e=>{if(e.button!==undefined&&e.button!==0)return;pointer=e.pointerId;startX=e.clientX;startY=e.clientY;startedAt=performance.now();triggered=false;moved=false;skipClick=false;el.classList.add("holding");el.setPointerCapture(pointer);timer=setTimeout(()=>{if(pointer!==null&&!moved&&!triggered){triggered=true;el.classList.remove("holding");specialAction(el,kind)}},HOLD_MS);frame=requestAnimationFrame(animate)});
+      el.addEventListener("pointermove",e=>{if(pointer!==e.pointerId)return;if(Math.hypot(e.clientX-startX,e.clientY-startY)>MOVE_LIMIT){moved=true;clearTimeout(timer);cancelAnimationFrame(frame);el.classList.remove("holding");resetProgress()}});
+      el.addEventListener("pointerup",end);el.addEventListener("pointercancel",end);
+      el.addEventListener("click",()=>{if(skipClick){skipClick=false;return}shortAction(kind)});
     }
     bindPress(lock,'alarm');bindPress(unlock,'trunk');
   </script>
 </body>
 </html>
+
+
+
 
 
 
