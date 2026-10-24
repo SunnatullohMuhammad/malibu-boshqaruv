@@ -31,7 +31,7 @@
 </head>
 <body>
   <main class="app" id="app">
-    <header class="top"><div class="brand">GARAGE<span>/</span>01</div><div class="connection"><i class="dot"></i><span>DEMO REJIMI</span></div></header>
+    <header class="top"><div class="brand">GARAGE<span>/</span>01</div><button class="connection" id="connection" type="button" aria-label="Ulanishni sozlash"><i class="dot"></i><span>SOZLASH KERAK</span></button></header>
     <section class="heading"><div><div class="eyebrow">AVTOMOBIL BOSHQARUVI</div><h1>COBALT</h1></div><div class="vehicle">Chevrolet · masofaviy boshqaruv</div></section>
     <section class="scene" aria-label="Chevrolet Cobalt rasmi"><img src="cobalt.jpg" alt="Siz yuborgan Chevrolet Cobalt rasmi" fetchpriority="high"><span class="photo-mark">CHEVROLET · COBALT</span></section>
     <div class="status" id="status"><i></i><span>O‘CHIRILGAN</span></div>
@@ -46,7 +46,7 @@
         <span class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 7.5-2"/></svg></span><span class="copy"><span class="label">Ochish</span><span class="sub">QISQA: OCHISH<br>USHLA: BAGAJ</span></span><span class="hold-cue">●</span><span class="progress"><span></span></span>
       </button>
     </section>
-    <footer class="foot">CHEVROLET COBALT - BOSHQARUV PANELI</footer>
+    <footer class="foot">CHEVROLET COBALT - MASOFAVIY BOSHQARUV</footer>
   </main>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script>
@@ -54,12 +54,19 @@
     let locked=false,running=false,alarmOn=false,toastTimer;
     const HOLD_MS=720,MOVE_LIMIT=18;
     function notice(text){toast.textContent=text;toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('show'),1900)}
-    $('#ignition').addEventListener('click',()=>{running=!running;app.classList.toggle('state-running',running);$('#ignition').classList.toggle('running',running);$('#status span').textContent=running?'O‘T OLDIRILGAN':'O‘CHIRILGAN';$('#ignitionLabel').textContent=running?'STOP':'START';notice(running?'O‘t oldirish yoqildi':'Avtomobil o‘chirildi')});
+    const connection=$('#connection'),cfgKey='cobalt-control-v1';
+    let config=JSON.parse(localStorage.getItem(cfgKey)||'{}');
+    function setConnection(ok){connection.querySelector('span').textContent=ok?'AVTOMOBIL ULANgan'.toLocaleUpperCase('uz-UZ'):(config.url&&config.token?'ALOQA KUTILMOQDA':'SOZLASH KERAK');connection.querySelector('.dot').style.background=ok?'#d7fb79':'#a8ad9c'}
+    async function api(path,method='GET',body){if(!config.url||!config.token)throw Error('Avval ulanishni sozlang');const r=await fetch(config.url.replace(/\/$/,'')+path,{method,headers:{Authorization:'Bearer '+config.token,...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined,cache:'no-store'});const d=await r.json();if(!r.ok)throw Error(d.error||'Server xatosi');return d}
+    connection.addEventListener('click',()=>{const url=prompt('Cloudflare Worker manzili (https://...workers.dev)',config.url||'');if(url===null)return;const token=prompt('Maxfiy boshqaruv kaliti',config.token||'');if(token===null)return;config={url:url.trim(),token:token.trim()};localStorage.setItem(cfgKey,JSON.stringify(config));setConnection(false);refreshState()});
+    function renderState(s){running=!!s.ignition;locked=!!s.locked;alarmOn=!!s.alarm;app.classList.toggle('state-running',running);$('#ignition').classList.toggle('running',running);$('#status span').textContent=running?'O‘T OLDIRILGAN':'O‘CHIRILGAN';$('#ignitionLabel').textContent=running?'STOP':'START';renderLock();setConnection(!!s.connected)}
+    async function refreshState(){try{renderState(await api('/api/state'))}catch{setConnection(false)}}
+    async function sendCommand(command,success){try{await api('/api/command','POST',{command});notice(success)}catch(e){notice(e.message)}}
+    $('#ignition').addEventListener('click',()=>sendCommand(running?'STOP':'START',running?'O‘chirish buyrug‘i yuborildi':'O‘t oldirish buyrug‘i yuborildi'));
     const lock=$('#lock'),unlock=$('#unlock');
     function renderLock(){lock.classList.toggle("active",locked);lock.classList.toggle("alarm",alarmOn)}
-    function setLock(next){locked=next;alarmOn=false;renderLock();notice(locked?'Qulflandi':'Qulf ochildi')}
-    function shortAction(kind){if(kind==="alarm")setLock(true);else setLock(false)}
-    function specialAction(el,kind){if(kind==="alarm"){locked=true;alarmOn=true;renderLock();notice("Oxrana yoqildi")}else{notice("Bagaj ochildi")}}
+    function shortAction(kind){sendCommand(kind==='alarm'?'LOCK':'UNLOCK',kind==='alarm'?'Qulflash buyrug‘i yuborildi':'Ochish buyrug‘i yuborildi')}
+    function specialAction(el,kind){sendCommand(kind==='alarm'?'ALARM':'TRUNK',kind==='alarm'?'Oxrana buyrug‘i yuborildi':'Bagaj ochish buyrug‘i yuborildi')}
     function bindPress(el,kind){let pointer=null,startX=0,startY=0,startedAt=0,timer=0,triggered=false,moved=false,skipClick=false,frame=0;
       function resetProgress(){el.style.setProperty("--hold",0)}
       function animate(){if(pointer===null)return;const progress=Math.min(1,(performance.now()-startedAt)/HOLD_MS);el.style.setProperty("--hold",progress);if(progress<1&&!triggered)frame=requestAnimationFrame(animate)}
@@ -70,6 +77,7 @@
       el.addEventListener("click",()=>{if(skipClick){skipClick=false;return}shortAction(kind)});
     }
     bindPress(lock,'alarm');bindPress(unlock,'trunk');
+    setConnection(false);refreshState();setInterval(refreshState,5000);
   </script>
 </body>
 </html>
